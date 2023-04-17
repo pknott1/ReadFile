@@ -1,306 +1,250 @@
 #include <iostream>
+#include "CCard.h"
+#include "CStudent.h"
+#include "CEasy.h"
+#include "CFeedback.h"
+#include "CGraduate.h"
+#include "CIndustrial.h"
+#include "CMitigating.h"
+#include "CPass.h"
+#include "CPlagiarism.h"
+#include "CResearch.h"
+#include "CSerial.h"
+#include "CAccreditation.h"
 #include <fstream>
 #include <string>
 #include <vector>
 
 using namespace std;
 
-int Random(int max)
-{
+//This is the random function given in the assignment brief
+int Random(int max) {
     return int(float(rand()) / (RAND_MAX + 1) * float(max));
 }
 
-struct SProfessor {
-public:
-    string name;
-    int prestige;
-};
-
-class CStudent;
-
-class CCard {
-public:
-    int type;
-    string name1;
-    string name2;
-    int power;
-
-    virtual ~CCard() {}
-
-    virtual void readCardType(ifstream& inFile) {
-        inFile >> type;
+//This reads in the seed from the text file given and returns the value in the file
+int readSeed() {
+    ifstream inFile;
+    int seed;
+    inFile.open("seed.txt");
+    //This loop reads each line until it reaches the end of the file
+    while (inFile) {
+        if (inFile.eof()) {
+            break;
+        }
+        inFile >> seed;
     }
 
-    virtual void readCardData(ifstream& inFile) {
-        inFile >> name1 >> name2 >> power;
+    return seed;
+}
+//This opens the files containing the decks and stores them in a vector of unique pointers.
+void readDeck(vector < unique_ptr < CCard >>& playerDeck, string fileName) {
+
+    // Open the file containing player 1's deck
+    ifstream inFile;
+    inFile.open(fileName);
+    vector < unique_ptr < CCard >> player1Deck;
+    while (inFile) {
+        auto tempCard = make_unique < CCard >();
+        tempCard->readCardType(inFile);
+        if (inFile.eof()) {
+            break;
+        }
+        //This reads in all of the card types and accounts for the different properties they might have.
+        switch (tempCard->type) {
+        //This reads in the student cards that all have a type of 1.
+        case 1: {
+            // A new unique pointer is created for the student card
+            auto studentCard = make_unique < CStudent >();
+            studentCard->type = tempCard->type;
+            //Student cards have all the properties of CCard so it calls the read function form the CCard class
+            studentCard->readCardData(inFile);
+            //It has an additonal property so this is also read
+            inFile >> studentCard->resilience;
+            //Then it's added to the deck
+            player1Deck.push_back(move(studentCard));
+            break;
+        }
+        case 2: {
+            auto plagiaristCard = make_unique < CPlagiarism >();
+            plagiaristCard->type = tempCard->type;
+            plagiaristCard->readCardData(inFile);
+            player1Deck.push_back(move(plagiaristCard));
+            break;
+        }
+        case 3: {
+            auto accredationCard = make_unique < CAccreditation >();
+            accredationCard->type = tempCard->type;
+            accredationCard->readCardData(inFile);
+            player1Deck.push_back(move(accredationCard));
+            break;
+        }
+        case 4: {
+            auto feedbackCard = make_unique < CFeedback >();
+            feedbackCard->type = tempCard->type;
+            feedbackCard->readCardData(inFile);
+            inFile >> feedbackCard->boost;
+            player1Deck.push_back(move(feedbackCard));
+            break;
+        }
+        case 5: {
+            auto industrialCard = make_unique < CIndustrial >();
+            industrialCard->type = tempCard->type;
+            industrialCard->readCardData(inFile);
+            inFile >> industrialCard->resilience;
+            inFile >> industrialCard->boost;
+            player1Deck.push_back(move(industrialCard));
+            break;
+        }
+        case 6: {
+            auto passCard = make_unique < CPass >();
+            passCard->type = tempCard->type;
+            passCard->readCardData(inFile);
+            inFile >> passCard->resilience;
+            inFile >> passCard->powerIncrement;
+            player1Deck.push_back(move(passCard));
+            break;
+        }
+        case 7: {
+            auto researchCard = make_unique < CResearch >();
+            researchCard->type = tempCard->type;
+            researchCard->readCardData(inFile);
+            player1Deck.push_back(move(researchCard));
+            break;
+        }
+        case 8: {
+            auto mitigatingCard = make_unique < CMitigating >();
+            mitigatingCard->type = tempCard->type;
+            mitigatingCard->readCardData(inFile);
+            player1Deck.push_back(move(mitigatingCard));
+            break;
+        }
+        case 9: {
+            auto easyCard = make_unique < CEasy >();
+            easyCard->type = tempCard->type;
+            easyCard->readCardData(inFile);
+            inFile >> easyCard->resilience;
+            inFile >> easyCard->powerIncrement;
+            player1Deck.push_back(move(easyCard));
+            break;
+        }
+        case 10: {
+            auto SerialCard = make_unique < CSerial >();
+            SerialCard->type = tempCard->type;
+            SerialCard->readCardData(inFile);
+            inFile >> SerialCard->resilience;
+            player1Deck.push_back(move(SerialCard));
+            break;
+        }
+        case 11: {
+            auto GraduateCard = make_unique < CGraduate >();
+            GraduateCard->type = tempCard->type;
+            GraduateCard->readCardData(inFile);
+            inFile >> GraduateCard->resilience;
+            inFile >> GraduateCard->boost;
+            player1Deck.push_back(move(GraduateCard));
+            break;
+        }
+
+        default:
+            cout << "Unknown card type: " << tempCard->type << endl;
+            break;
+        }
     }
 
-    virtual void Play(vector<unique_ptr<CStudent>>& playerTable) {
-
-    }
-
-    virtual void Activate() {
-
-    }
-};
-
-class CStudent : public CCard {
-public:
-    int resilience;
-
-    void Play(vector<unique_ptr<CStudent>>& playerTable) {
-        cout << "Player plays " << this->name1 << this->name2 << "\n";
-        if (this) {
-            playerTable.push_back(make_unique<CStudent>(*this));
-        }
-        else {
-            cout << "Cannot add non-student card to bench.\n";
-        }
-        cout << playerTable.size() << endl;
-    }
-};
-
-
-    void BenchActivate(vector<unique_ptr<CStudent>>& playerTable, vector<unique_ptr<CStudent>>& player2Table, SProfessor& professor2) {
-        int attackerIndex = Random(playerTable.size());
-        int targetIndex = Random(player2Table.size());
-        for (int i = 0; i < playerTable.size(); i++) {
-            auto& attackerCard = playerTable[(playerTable.size() - i) - 1];
-            if (player2Table.empty()) {
-                int attackPower = attackerCard->power;
-                professor2.prestige -= attackPower;
-
-                // Output the attack result
-                cout << attackerCard->name1 << " attacks " << professor2.name << ". ";
-                cout << professor2.name << "'s prestige is now " << professor2.prestige << "\n";
-            }
-            else
-            {
-                auto& targetCard = player2Table[targetIndex];
-
-                // Check if the target card is a student or the professor
-                if (targetCard) {
-                    // Reduce the target student's resilience by the power of the attacker student
-                    int attackPower = attackerCard->power;
-                    targetCard->resilience -= attackPower;
-
-                    // Output the attack result
-                    cout << attackerCard->name1 << attackerCard->name2 << " attacks " << targetCard->name1 << targetCard->name2 << ". ";
-                    if (targetCard->resilience <= 0) {
-                        cout << targetCard->name1 << " is defeated\n";
-                        player2Table.erase(player2Table.begin() + targetIndex);
-                    }
-                    else {
-                        cout << targetCard->name1 << targetCard->name2 << "'s resilience is now " << targetCard->resilience << "\n";
-                    }
-                }
-
-            }
-
-
-
-        }
-
-        
-
-    };
-
-    class CPlagiarism : public CCard {
-    public:
-        virtual void Activate() override {
-
-        }
-    };
-
-
-
-    class CAccreditation : public CCard {
-    public:
-        virtual void Activate() override {
-        }
-    };
-
-
-
-
-
-    int main() {
-        // Open the file containing player 1's deck
-        ifstream inFile;
-        inFile.open("plagiarist.txt");
-
-        // Gives the player a 30 card deck 
-
-        vector<unique_ptr<CCard>> player1Deck;
-        while (inFile) {
-            auto tempCard = make_unique<CCard>();
-            tempCard->readCardType(inFile);
-            if (inFile.eof()) {
-                break;
-            }
-
-            switch (tempCard->type) {
-            case 1: {
-                auto studentCard = make_unique<CStudent>();
-                studentCard->type = tempCard->type;
-                studentCard->readCardData(inFile);
-                inFile >> studentCard->resilience;
-                player1Deck.push_back(move(studentCard));
-
-                break;
-            }
-
-                  // Add cases for other card types as needed
-            default:
-                cout << "Unknown card type: " << tempCard->type << endl;
-                break;
-            }
-        }
-
-        inFile.close();
-
-        cout << "player1Deck size: " << player1Deck.size() << endl;
-
-        // Open the file containing player 2's deck
-        inFile.open("piffle-paper.txt");
-        // Gives player 2 a 30 card deck
-        vector<unique_ptr<CCard>> player2Deck;
-        while (inFile) {
-            auto tempCard = make_unique<CCard>();
-            tempCard->readCardType(inFile);
-            if (inFile.eof()) {
-                break;
-            }
-
-            switch (tempCard->type) {
-            case 1: {
-                auto studentCard = make_unique<CStudent>();
-                studentCard->type = tempCard->type;
-                studentCard->readCardData(inFile);
-                inFile >> studentCard->resilience;
-                player2Deck.push_back(move(studentCard));
-                break;
-            }
-                  // Add cases for other card types as needed
-            default:
-                cout << "Unknown card type: " << tempCard->type << endl;
-                break;
-            }
-        }
-
-        inFile.close();
-
-        cout << "player2Deck size: " << player2Deck.size() << endl;
-
-        //This gives the professors a name and prestige value for the game
-        SProfessor professor1 = { "Plagiarist", 30 };
-        SProfessor professor2 = { "Piffle-Paper", 30 };
-        //This gives the player a card before the game starts
-        vector<unique_ptr<CCard>> player1Hand;
-        player1Hand.push_back(move(player1Deck[0]));
-        cout << "Player 1 draws " << player1Hand[0]->name1 << player1Hand[0]->name2 << "\n";
-        player1Deck.erase(player1Deck.begin());
-
-
-        vector<unique_ptr<CCard>> player2Hand;
-        player2Hand.push_back(move(player2Deck[0]));
-        cout << "Player 2 draws " << player2Hand[0]->name1 << player2Hand[0]->name2 << "\n";
-        player2Deck.erase(player2Deck.begin());
-
-
-        vector<unique_ptr<CStudent>> player1Table;
-        vector<unique_ptr<CStudent>> player2Table;
-
-        // The game begins in this section
-        cout << "Welcome to U-Can’t. Let the winnowing begin...\n";
-
-        // Displays the round counter for each round
-        for (int round = 1; round <= 30; round++) {
-            cout << "Round " << round << "\n";
-
-            // This lets Player 1 draw a card
-            player1Hand.push_back(move(player1Deck[0]));
-            cout << "Player 1 draws " << player1Hand[1]->name1 << player1Hand[1]->name2 << "\n";
-            cout << "player1Hand size: " << player1Hand.size() << endl;
-            player1Deck.erase(player1Deck.begin());
-
-            int randomCard;
-
-            // This lets Player 1 choose a card randomly from their hand and play it
-            randomCard = Random(player1Hand.size());
-            unique_ptr<CCard> player1Card = move(player1Hand[randomCard]);
-            player1Card->Play(player1Table);
-            player1Hand.erase(player1Hand.begin() + randomCard);
-            cout << "player1Hand size: " << player1Hand.size() << endl;
-            BenchActivate(player1Table, player2Table, professor2);
-
-
-
-
-
-
-            // This lets Player 2 draw a card
-            player2Hand.push_back(move(player2Deck[1]));
-            cout << "Player 2 draws " << player2Hand[1]->name1 << player2Hand[1]->name2 << "\n";
-            cout << "player2Hand size: " << player2Hand.size() << endl;
-            player2Deck.erase(player2Deck.begin());
-
-            // This lets Player 2 choose a card randomly from their hand and play it
-            randomCard = Random(player2Hand.size());
-            unique_ptr<CCard> player2Card = move(player2Hand[randomCard]);
-            cout << "Player 2 plays " << player2Card->name1 << player2Card->name2 << "\n";
-            player2Card->Play(player2Table);
-            player2Hand.erase(player2Hand.begin() + randomCard);
-            cout << "player2Hand size: " << player2Hand.size() << endl;
-            BenchActivate(player2Table, player1Table, professor1);
-            // This checks if PLayer 1 has lost
-            if (professor1.prestige <= 0) {
-                cout << "Game over!\n";
-                cout << professor1.name << "'s prestige is" << professor1.prestige << "\n";
-                cout << professor2.name << "'s prestige is" << professor2.prestige << "\n";
-                cout << "Player 1 wins!\n";
-                return 0;
-            }
-            // This checks if PLayer 2 has lost
-            else if (professor2.prestige <= 0) {
-                cout << "Game over!\n";
-                cout << professor1.name << "'s prestige is" << professor1.prestige << "\n";
-                cout << professor2.name << "'s prestige is" << professor2.prestige << "\n";
-                cout << "Player 2 wins!\n";
-                return 0;
-            }
-
-
-
-
-
-
-
-
-
-
-
-
-        }
-
-
-
+    inFile.close();
+
+}
+//This calls all the functions to read the files to set the game up and call the actual game function
+void initialiseGame() {
+    int seed = readSeed();
+    srand(seed);
+    vector < unique_ptr < CCard >> player1Deck;
+    vector < unique_ptr < CCard >> player2Deck;
+    readDeck(player1Deck, "plagiarist.txt");
+    readDeck(player2Deck, "piffle-paper.txt");
+    playGame(player1Deck, player2Deck);
+}
+//This  allows the player to play a random card from their hand
+void playCard(vector < unique_ptr < CCard >>& hand, vector < unique_ptr < CStudent >>& table, vector < unique_ptr < CStudent >>& table2, CProfessor& current, CProfessor& opponent) {
+    int randomCard = Random(hand.size());
+    //This moves a random card from the hand to be activated/moved to the bench
+    unique_ptr < CCard > card = move(hand[randomCard]);
+    cout << current.name << " plays " << card->name1 << card->name2 << "\n";
+    //All student cards will be played onto the table
+    card->Play(table);
+    hand.erase(hand.begin() + randomCard);
+    //An effect of a card will activate and in the case of the student card it will attack the opposing player
+    card->Activate(table, table2, current, opponent);
+}
+//This allows the player to draw a card from the deck in the order it was read from the file
+void drawCard(vector < unique_ptr < CCard >>& deck, vector < unique_ptr < CCard >>& hand,
+    const string& playerName) {
+    //This moves a card from the deck to the hand
+    hand.push_back(move(deck[0]));
+    cout << playerName << " draws " << hand.back()->name1 << hand.back()->name2 << "\n";
+    deck.erase(deck.begin());
+}
+//This checks to see if the game has ended or if a player has zero health
+void checkGameOver(CProfessor& professor1, CProfessor& professor2) {
+    //This outputs the winner of the game based on whoever has 0 health
+    if (professor1.prestige <= 0 || professor2.prestige <= 0) {
         cout << "Game over!\n";
         cout << professor1.name << "'s prestige is " << professor1.prestige << "\n";
         cout << professor2.name << "'s prestige is " << professor2.prestige << "\n";
         if (professor1.prestige > professor2.prestige) {
             cout << "Player 1 wins!\n";
-            return 0;
         }
         else if (professor2.prestige > professor1.prestige) {
             cout << "Player 2 wins!\n";
-            return 0;
         }
         else {
             cout << "It's a tie!\n";
-            return 0;
         }
+        exit(0);
+    }
+}
+//This starts the game. All the variables for the game are declared here and these variables are used to call all the other functions.
+int playGame(vector < unique_ptr < CCard >>& player1Deck, vector < unique_ptr < CCard >>& player2Deck) {
+    CProfessor professor1 = {
+      "Plagiarist",
+      30
+    };
+    CProfessor professor2 = {
+      "Piffle-Paper",
+      30
+    };
+    vector < unique_ptr < CCard >> player1Hand;
+    vector < unique_ptr < CCard >> player2Hand;
+    vector < unique_ptr < CStudent >> player1Table;
+    vector < unique_ptr < CStudent >> player2Table;
 
+    cout << "Welcome to U-Can’t. Let the winnowing begin...\n";
 
+    drawCard(player1Deck, player1Hand, "Player 1");
+    drawCard(player2Deck, player2Hand, "Player 2");
+
+    //Each round will consist of both players taking a turn, which they will draw a card and play it. The card will either attack/activate it's effect.
+
+    for (int round = 1; round <= 30; round++) {
+        cout << "Round " << round << "\n";
+
+        // Player 1's turn
+        drawCard(player1Deck, player1Hand, "Player 1");
+        playCard(player1Hand, player1Table, player2Table, professor1, professor2);
+        checkGameOver(professor1, professor2);
+
+        // Player 2's turn
+        drawCard(player2Deck, player2Hand, "Player 2");
+        playCard(player2Hand, player2Table, player1Table, professor2, professor1);
+        checkGameOver(professor1, professor2);
     }
 
+    return 0;
+}
+
+int main() {
+
+    initialiseGame();
+
+};

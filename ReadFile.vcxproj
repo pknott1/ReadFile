@@ -127,11 +127,40 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CAccreditation.cpp" />
+    <ClCompile Include="CCard.cpp" />
+    <ClCompile Include="CEasy.cpp" />
+    <ClCompile Include="CFeedback.cpp" />
+    <ClCompile Include="CGraduate.cpp" />
+    <ClCompile Include="CIndustrial.cpp" />
+    <ClCompile Include="CMitigating.cpp" />
+    <ClCompile Include="CPass.cpp" />
+    <ClCompile Include="CPlagiarism.cpp" />
+    <ClCompile Include="CResearch.cpp" />
+    <ClCompile Include="CSerial.cpp" />
+    <ClCompile Include="CStudent.cpp" />
     <ClCompile Include="ReadFile.cpp" />
+    <ClCompile Include="CProfessor.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CAccreditation.h" />
+    <ClInclude Include="CCard.h" />
+    <ClInclude Include="CEasy.h" />
+    <ClInclude Include="CFeedback.h" />
+    <ClInclude Include="CGraduate.h" />
+    <ClInclude Include="CIndustrial.h" />
+    <ClInclude Include="CMitigating.h" />
+    <ClInclude Include="CPass.h" />
+    <ClInclude Include="CPlagiarism.h" />
+    <ClInclude Include="CResearch.h" />
+    <ClInclude Include="CSerial.h" />
+    <ClInclude Include="CStudent.h" />
+    <ClInclude Include="CProfessor.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="piffle-paper.txt" />
     <Text Include="plagiarist.txt" />
+    <Text Include="seed.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -5,6 +5,12 @@ VisualStudioVersion = 17.5.33424.131
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ReadFile", "ReadFile.vcxproj", "{45C219BF-571D-4E47-8C7A-910E923FD06E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D91C9FF3-D99F-4E7C-885B-3360774068C5}"
+	ProjectSection(SolutionItems) = preProject
+		piffle-paper.txt = piffle-paper.txt
+		plagiarist.txt = plagiarist.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64

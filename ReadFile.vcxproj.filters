@@ -18,12 +18,91 @@
     <ClCompile Include="ReadFile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CStudent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CCard.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CPlagiarism.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CIndustrial.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CFeedback.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CPass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CSerial.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CGraduate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CEasy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CMitigating.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CResearch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CProfessor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CAccreditation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="plagiarist.txt">
-      <Filter>Source Files</Filter>
-    </Text>
-    <Text Include="piffle-paper.txt">
+    <ClInclude Include="CStudent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CCard.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CPlagiarism.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CAccreditation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CIndustrial.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CFeedback.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CPass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CSerial.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CGraduate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CEasy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CMitigating.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CResearch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CProfessor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="piffle-paper.txt" />
+    <Text Include="plagiarist.txt" />
+    <Text Include="seed.txt">
       <Filter>Source Files</Filter>
     </Text>
   </ItemGroup>
